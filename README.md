@@ -47,13 +47,6 @@ The `contamination` parameter — Isolation Forest's estimate of what fraction o
 
 0.0025 and 0.0017 are essentially tied on F1 — raising `contamination` mainly traded precision for recall rather than improving overall detection quality. **0.0025 was selected as the final operating point**, favoring the higher recall (catching more fraud, at the cost of more false positives) — a defensible choice given that missed fraud is typically more costly than a flagged-but-legitimate transaction.
 
-## Limitations & Next Steps
-
-- **Absolute precision and recall are modest** (~17–25%), which is expected for a purely unsupervised approach on this data — it reflects the genuine difficulty of separating rare fraud from noise without using labels to learn fraud-specific patterns, not an implementation flaw.
-- **Labels were used for evaluation and hyperparameter selection, not model fitting** — this is standard practice for anomaly detection (you need *some* ground truth to know if your unsupervised model is any good), but it means the reported metrics assume label availability that a fully unsupervised production deployment might not have upfront.
-- **A natural next step is a semi-supervised or hybrid approach:** using the unsupervised anomaly score as one input to a supervised model trained on the (small) labeled fraud set, rather than treating detection as purely unsupervised. This could combine Isolation Forest's ability to catch novel patterns with the precision gains of learning from known fraud examples.
-- **Time-based features were explored only at a surface level** (raw `Time` in seconds since first transaction). Engineering features like time-since-last-transaction-for-this-account or transaction velocity could meaningfully improve detection, though this dataset's anonymization limits how far that can go.
-
 ## Tools
 
 Python, pandas, scikit-learn (`IsolationForest`, `LocalOutlierFactor`, `StandardScaler`), seaborn, matplotlib.
